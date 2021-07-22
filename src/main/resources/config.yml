@@ -1,0 +1,26 @@
+database:
+  # Database host address, default = localhost
+  host: localhost
+  # Database port, default = 3306
+  port: 3306
+  # Database name, default = minecraft
+  database: minecraft
+  # Database user, default = root
+  user: root
+  # Database password
+  password: password
+  # Connect to database over SSL, default = false
+  enable-ssl: false
+  # Overrides the size of the database connection pool, default = 10
+  maximum-pool-size: 10
+  # Connection timeout in milliseconds, default = maximum size of signed int
+  connection-timeout: 5000
+
+password:
+  # Minimum length of the password required, default = 6
+  minimum-length: 6
+  # Maximum length of the password required, default = 64
+  maximum-length: 64
+
+# Time interval in seconds between two login reminder messages
+reminder-message-frequency: 5

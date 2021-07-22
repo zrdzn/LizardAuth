@@ -1,0 +1,10 @@
+name: LizardAuth
+version: @version@
+main: io.github.enixor.minecraft.lizardauth.LizardAuthPlugin
+api-version: 1.16
+authors: [Enixor]
+description: Simple and secure authorization plugin for minecraft servers.
+commands:
+  register:
+  unregister:
+  login:

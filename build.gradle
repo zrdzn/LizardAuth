@@ -1,0 +1,26 @@
+plugins {
+    id 'java'
+    id 'com.github.johnrengelman.shadow' version '7.0.0'
+}
+
+group = pluginGroup
+version = pluginVersion
+
+sourceCompatibility = '1.16'
+targetCompatibility = '1.16'
+
+repositories {
+    mavenCentral()
+    maven { url 'https://papermc.io/repo/repository/maven-public/' }
+}
+
+dependencies {
+    compileOnly 'io.papermc.paper:paper-api:1.17-R0.1-SNAPSHOT'
+
+    implementation 'com.zaxxer:HikariCP:5.0.0'
+    implementation 'mysql:mysql-connector-java:8.0.26'
+    implementation 'at.favre.lib:bcrypt:0.9.0'
+    implementation 'org.slf4j:slf4j-api:1.7.25'
+}
+
+shadowJar
