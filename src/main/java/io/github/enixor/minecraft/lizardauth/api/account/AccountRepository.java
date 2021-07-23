@@ -4,12 +4,12 @@ import java.util.UUID;
 
 public interface AccountRepository {
 
-    void registerAccount(UUID uuid, String password, boolean force);
+    void registerAccount(UUID playerId, String password, boolean force);
 
-    void unregisterAccount(UUID uuid, String password, boolean force);
+    void unregisterAccount(UUID playerId, String password, boolean force);
 
-    boolean isRegistered(UUID uuid);
+    boolean isRegistered(UUID playerId);
 
-    String getHashedPassword(UUID uuid);
+    String getHashedPassword(UUID playerId);
 
 }

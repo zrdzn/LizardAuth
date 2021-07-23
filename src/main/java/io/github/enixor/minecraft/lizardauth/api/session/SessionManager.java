@@ -9,10 +9,10 @@ public interface SessionManager {
 
     Map<UUID, BukkitTask> getPlayerTaskMap();
 
-    boolean authorizePlayer(UUID uuid, String password, boolean force);
+    boolean authorizePlayer(UUID playerId, String password, boolean force);
 
-    void deauthorizePlayer(UUID uuid);
+    void deauthorizePlayer(UUID playerId);
 
-    boolean isPlayerLoggedIn(UUID uuid);
+    boolean isPlayerLoggedIn(UUID playerId);
 
 }
