@@ -31,25 +31,25 @@ public class SessionManagerImpl implements SessionManager {
     }
 
     @Override
-    public boolean authorizePlayer(UUID uuid, String password, boolean force) {
+    public boolean authorizePlayer(UUID playerId, String password, boolean force) {
         if (!force) {
-            Player player = this.server.getPlayer(uuid);
+            Player player = this.server.getPlayer(playerId);
             if (player == null) {
                 return false;
             }
 
-            if (this.isPlayerLoggedIn(uuid)) {
+            if (this.isPlayerLoggedIn(playerId)) {
                 player.sendMessage(Component.text("You are already authorized.", NamedTextColor.RED));
                 return false;
             }
 
-            String hashedPassword = this.accountRepository.getHashedPassword(uuid);
+            String hashedPassword = this.accountRepository.getHashedPassword(playerId);
             if (hashedPassword == null) {
                 player.sendMessage(Component.text("Something went wrong while authenticating.", NamedTextColor.RED));
                 return false;
             }
 
-            if (!this.accountRepository.isRegistered(uuid)) {
+            if (!this.accountRepository.isRegistered(playerId)) {
                 player.sendMessage(Component.text("You need to register first.", NamedTextColor.RED));
                 return false;
             }
@@ -61,19 +61,19 @@ public class SessionManagerImpl implements SessionManager {
             }
         }
 
-        this.playerTaskMap.remove(uuid);
+        this.playerTaskMap.remove(playerId);
 
         return true;
     }
 
     @Override
-    public void deauthorizePlayer(UUID uuid) {
-        this.playerTaskMap.remove(uuid);
+    public void deauthorizePlayer(UUID playerId) {
+        this.playerTaskMap.remove(playerId);
     }
 
     @Override
-    public boolean isPlayerLoggedIn(UUID uuid) {
-        return this.server.getOnlinePlayers().contains(this.server.getPlayer(uuid)) && !this.playerTaskMap.containsKey(uuid);
+    public boolean isPlayerLoggedIn(UUID playerId) {
+        return this.server.getOnlinePlayers().contains(this.server.getPlayer(playerId)) && !this.playerTaskMap.containsKey(playerId);
     }
 
 }

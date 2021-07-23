@@ -19,14 +19,14 @@ public record PlayerJoinListener(LizardAuthPlugin plugin) implements Listener {
         SessionManager sessionManager = this.plugin.getSessionManager();
 
         Player player = event.getPlayer();
-        UUID uuid = player.getUniqueId();
+        UUID playerId = player.getUniqueId();
 
         BukkitTask task = this.plugin.getServer().getScheduler().runTaskTimer(this.plugin, () ->
                         player.sendMessage(Component.text("Login with /login <password>.", NamedTextColor.RED)),
                 20L * 2L, 20L * this.plugin.getReminderMessageFrequency()
         );
 
-        sessionManager.getPlayerTaskMap().put(uuid, task);
+        sessionManager.getPlayerTaskMap().put(playerId, task);
     }
 
 }
