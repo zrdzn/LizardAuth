@@ -23,8 +23,7 @@ public record PlayerJoinListener(LizardAuthPlugin plugin) implements Listener {
 
         BukkitTask task = this.plugin.getServer().getScheduler().runTaskTimer(this.plugin, () ->
                         player.sendMessage(Component.text("Login with /login <password>.", NamedTextColor.RED)),
-                20L * 2L, 20L * this.plugin.getReminderMessageFrequency()
-        );
+                20L * 2L, 20L * this.plugin.getReminderMessageFrequency());
 
         sessionManager.getPlayerTaskMap().put(playerId, task);
     }

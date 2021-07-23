@@ -23,8 +23,7 @@ public record UnregisterCommand(LizardAuthPlugin plugin) implements CommandExecu
         }
 
         this.plugin.getServer().getScheduler().runTaskAsynchronously(this.plugin, () ->
-                this.plugin.getAccountRepository().unregisterAccount(player.getUniqueId(), args[0], false)
-        );
+                this.plugin.getAccountRepository().unregisterAccount(player.getUniqueId(), args[0], false));
 
         return true;
     }
