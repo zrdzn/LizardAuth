@@ -1,4 +1,4 @@
-package io.github.enixor.minecraft.lizardauth.api.account;
+package io.github.enixor.minecraft.lizardauth.account;
 
 import java.util.UUID;
 

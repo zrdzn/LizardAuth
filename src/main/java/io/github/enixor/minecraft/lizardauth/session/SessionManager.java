@@ -1,4 +1,4 @@
-package io.github.enixor.minecraft.lizardauth.api.session;
+package io.github.enixor.minecraft.lizardauth.session;
 
 import org.bukkit.scheduler.BukkitTask;
 
