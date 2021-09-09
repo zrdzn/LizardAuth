@@ -16,10 +16,13 @@ repositories {
 
 dependencies {
     compileOnly 'io.papermc.paper:paper-api:1.17.1-R0.1-SNAPSHOT'
+    
+    implementation 'org.mariadb.jdbc:mariadb-java-client:2.7.4'
 
     implementation 'com.zaxxer:HikariCP:5.0.0'
-    implementation 'mysql:mysql-connector-java:8.0.26'
+
     implementation 'at.favre.lib:bcrypt:0.9.0'
+
     implementation 'org.slf4j:slf4j-api:1.7.32'
 }
 
