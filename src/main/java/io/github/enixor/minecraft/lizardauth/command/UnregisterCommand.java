@@ -1,6 +1,7 @@
 package io.github.enixor.minecraft.lizardauth.command;
 
 import io.github.enixor.minecraft.lizardauth.LizardAuthPlugin;
+import io.github.enixor.minecraft.lizardauth.account.AccountService;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.command.Command;
@@ -9,7 +10,15 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
-public record UnregisterCommand(LizardAuthPlugin plugin) implements CommandExecutor {
+public class UnregisterCommand implements CommandExecutor {
+
+    private final LizardAuthPlugin plugin;
+    private final AccountService accountService;
+
+    public UnregisterCommand(LizardAuthPlugin plugin, AccountService accountService) {
+        this.plugin = plugin;
+        this.accountService = accountService;
+    }
 
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
@@ -23,7 +32,7 @@ public record UnregisterCommand(LizardAuthPlugin plugin) implements CommandExecu
         }
 
         this.plugin.getServer().getScheduler().runTaskAsynchronously(this.plugin, () ->
-                this.plugin.getAccountRepository().unregisterAccount(player.getUniqueId(), args[0], false));
+                this.accountService.unregisterAccount(player.getUniqueId(), args[0], false));
 
         return true;
     }

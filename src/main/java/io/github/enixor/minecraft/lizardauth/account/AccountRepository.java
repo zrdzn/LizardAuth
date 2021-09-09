@@ -4,9 +4,9 @@ import java.util.UUID;
 
 public interface AccountRepository {
 
-    void registerAccount(UUID playerId, String password, boolean force);
+    boolean registerAccount(UUID playerId, String username, String password);
 
-    void unregisterAccount(UUID playerId, String password, boolean force);
+    boolean unregisterAccount(UUID playerId, String password);
 
     boolean isRegistered(UUID playerId);
 

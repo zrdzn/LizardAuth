@@ -1,9 +1,7 @@
 package io.github.enixor.minecraft.lizardauth.session;
 
 import at.favre.lib.crypto.bcrypt.BCrypt;
-import io.github.enixor.minecraft.lizardauth.LizardAuthPlugin;
-import io.github.enixor.minecraft.lizardauth.api.account.AccountRepository;
-import io.github.enixor.minecraft.lizardauth.api.session.SessionManager;
+import io.github.enixor.minecraft.lizardauth.account.AccountRepository;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Server;
@@ -20,9 +18,9 @@ public class SessionManagerImpl implements SessionManager {
     private final AccountRepository accountRepository;
     private final Map<UUID, BukkitTask> playerTaskMap = new HashMap<>();
 
-    public SessionManagerImpl(LizardAuthPlugin plugin) {
-        this.server = plugin.getServer();
-        this.accountRepository = plugin.getAccountRepository();
+    public SessionManagerImpl(Server server, AccountRepository accountRepository) {
+        this.server = server;
+        this.accountRepository = accountRepository;
     }
 
     @Override
@@ -43,14 +41,14 @@ public class SessionManagerImpl implements SessionManager {
                 return false;
             }
 
-            String hashedPassword = this.accountRepository.getHashedPassword(playerId);
-            if (hashedPassword == null) {
-                player.sendMessage(Component.text("Something went wrong while authenticating.", NamedTextColor.RED));
+            if (!this.accountRepository.isRegistered(playerId)) {
+                player.sendMessage(Component.text("You need to register first.", NamedTextColor.RED));
                 return false;
             }
 
-            if (!this.accountRepository.isRegistered(playerId)) {
-                player.sendMessage(Component.text("You need to register first.", NamedTextColor.RED));
+            String hashedPassword = this.accountRepository.getHashedPassword(playerId);
+            if (hashedPassword == null) {
+                player.sendMessage(Component.text("Something went wrong while authenticating.", NamedTextColor.RED));
                 return false;
             }
 
@@ -61,6 +59,8 @@ public class SessionManagerImpl implements SessionManager {
             }
         }
 
+        System.out.println(this.playerTaskMap.get(playerId).getTaskId());
+        this.playerTaskMap.get(playerId).cancel();
         this.playerTaskMap.remove(playerId);
 
         return true;

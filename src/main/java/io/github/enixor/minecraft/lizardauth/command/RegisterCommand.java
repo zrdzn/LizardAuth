@@ -1,6 +1,7 @@
 package io.github.enixor.minecraft.lizardauth.command;
 
 import io.github.enixor.minecraft.lizardauth.LizardAuthPlugin;
+import io.github.enixor.minecraft.lizardauth.account.AccountService;
 import io.github.enixor.minecraft.lizardauth.configuration.PasswordSettings;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
@@ -10,7 +11,15 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
-public record RegisterCommand(LizardAuthPlugin plugin) implements CommandExecutor {
+public class RegisterCommand implements CommandExecutor {
+
+    private final LizardAuthPlugin plugin;
+    private final AccountService accountService;
+
+    public RegisterCommand(LizardAuthPlugin plugin, AccountService accountService) {
+        this.plugin = plugin;
+        this.accountService = accountService;
+    }
 
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
@@ -50,7 +59,7 @@ public record RegisterCommand(LizardAuthPlugin plugin) implements CommandExecuto
         }
 
         this.plugin.getServer().getScheduler().runTaskAsynchronously(this.plugin, () ->
-                this.plugin.getAccountRepository().registerAccount(player.getUniqueId(), args[0], false));
+                this.accountService.registerAccount(player.getUniqueId(), args[0], false));
 
         return true;
     }

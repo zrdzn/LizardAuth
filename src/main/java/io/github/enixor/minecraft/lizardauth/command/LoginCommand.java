@@ -1,7 +1,6 @@
 package io.github.enixor.minecraft.lizardauth.command;
 
-import io.github.enixor.minecraft.lizardauth.LizardAuthPlugin;
-import io.github.enixor.minecraft.lizardauth.api.session.SessionManager;
+import io.github.enixor.minecraft.lizardauth.session.SessionManager;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.command.Command;
@@ -14,7 +13,13 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Map;
 import java.util.UUID;
 
-public record LoginCommand(LizardAuthPlugin plugin) implements CommandExecutor {
+public class LoginCommand implements CommandExecutor {
+
+    private final SessionManager sessionManager;
+
+    public LoginCommand(SessionManager sessionManager) {
+        this.sessionManager = sessionManager;
+    }
 
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
@@ -27,9 +32,7 @@ public record LoginCommand(LizardAuthPlugin plugin) implements CommandExecutor {
             return true;
         }
 
-        SessionManager sessionManager = this.plugin.getSessionManager();
-
-        Map<UUID, BukkitTask> playerTaskMap = sessionManager.getPlayerTaskMap();
+        Map<UUID, BukkitTask> playerTaskMap = this.sessionManager.getPlayerTaskMap();
         UUID uuid = player.getUniqueId();
 
         BukkitTask task = playerTaskMap.get(uuid);
@@ -38,7 +41,10 @@ public record LoginCommand(LizardAuthPlugin plugin) implements CommandExecutor {
             return true;
         }
 
-        player.sendMessage(Component.text("You have successfully logged in.", NamedTextColor.GREEN));
+        if (this.sessionManager.authorizePlayer(uuid, args[0], false)) {
+            player.sendMessage(Component.text("You have successfully logged in.", NamedTextColor.GREEN));
+            return true;
+        }
 
         return true;
     }

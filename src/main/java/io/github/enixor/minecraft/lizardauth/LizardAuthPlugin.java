@@ -1,7 +1,10 @@
 package io.github.enixor.minecraft.lizardauth;
 
 import com.zaxxer.hikari.HikariDataSource;
-import io.github.enixor.minecraft.lizardauth.api.account.AccountRepository;
+import io.github.enixor.minecraft.lizardauth.account.AccountRepository;
+import io.github.enixor.minecraft.lizardauth.account.AccountService;
+import io.github.enixor.minecraft.lizardauth.account.AccountServiceImpl;
+import io.github.enixor.minecraft.lizardauth.session.SessionManager;
 import io.github.enixor.minecraft.lizardauth.command.LoginCommand;
 import io.github.enixor.minecraft.lizardauth.command.RegisterCommand;
 import io.github.enixor.minecraft.lizardauth.command.UnregisterCommand;
@@ -28,8 +31,6 @@ public class LizardAuthPlugin extends JavaPlugin {
     private HikariDataSource dataSource;
     private PasswordSettings passwordSettings;
     private long reminderMessageFrequency;
-    private AccountRepository accountRepository;
-    private SessionManagerImpl sessionManagerImpl;
 
     @Override
     public void onEnable() {
@@ -73,16 +74,18 @@ public class LizardAuthPlugin extends JavaPlugin {
 
         this.reminderMessageFrequency = configuration.getLong("reminder-message-frequency", 5L);
 
-        this.accountRepository = new AccountRepositoryImpl(server, this.getDataSource(), this.getSessionManager());
+        AccountRepository accountRepository = new AccountRepositoryImpl(this.getDataSource());
 
-        this.getCommand("register").setExecutor(new RegisterCommand(this));
-        this.getCommand("unregister").setExecutor(new UnregisterCommand(this));
-        this.getCommand("login").setExecutor(new LoginCommand(this));
+        SessionManager sessionManager = new SessionManagerImpl(server, accountRepository);
 
-        pluginManager.registerEvents(new PlayerJoinListener(this), this);
-        pluginManager.registerEvents(new PlayerQuitListener(this), this);
+        AccountService accountService = new AccountServiceImpl(server, accountRepository, sessionManager);
 
-        this.sessionManagerImpl = new SessionManagerImpl(this);
+        this.getCommand("register").setExecutor(new RegisterCommand(this, accountService));
+        this.getCommand("unregister").setExecutor(new UnregisterCommand(this, accountService));
+        this.getCommand("login").setExecutor(new LoginCommand(sessionManager));
+
+        pluginManager.registerEvents(new PlayerJoinListener(this, sessionManager), this);
+        pluginManager.registerEvents(new PlayerQuitListener(sessionManager), this);
     }
 
     @Override
@@ -100,14 +103,6 @@ public class LizardAuthPlugin extends JavaPlugin {
 
     public long getReminderMessageFrequency() {
         return this.reminderMessageFrequency;
-    }
-
-    public AccountRepository getAccountRepository() {
-        return this.accountRepository;
-    }
-
-    public SessionManagerImpl getSessionManager() {
-        return this.sessionManagerImpl;
     }
 
 }
