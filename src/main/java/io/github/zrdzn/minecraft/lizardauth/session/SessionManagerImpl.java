@@ -1,7 +1,7 @@
-package io.github.enixor.minecraft.lizardauth.session;
+package io.github.zrdzn.minecraft.lizardauth.session;
 
 import at.favre.lib.crypto.bcrypt.BCrypt;
-import io.github.enixor.minecraft.lizardauth.account.AccountRepository;
+import io.github.zrdzn.minecraft.lizardauth.account.AccountRepository;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Server;

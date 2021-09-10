@@ -1,7 +1,7 @@
-package io.github.enixor.minecraft.lizardauth.command;
+package io.github.zrdzn.minecraft.lizardauth.command;
 
-import io.github.enixor.minecraft.lizardauth.LizardAuthPlugin;
-import io.github.enixor.minecraft.lizardauth.account.AccountService;
+import io.github.zrdzn.minecraft.lizardauth.LizardAuthPlugin;
+import io.github.zrdzn.minecraft.lizardauth.account.AccountService;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.command.Command;

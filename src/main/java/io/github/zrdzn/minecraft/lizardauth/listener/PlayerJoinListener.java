@@ -1,7 +1,7 @@
-package io.github.enixor.minecraft.lizardauth.listener;
+package io.github.zrdzn.minecraft.lizardauth.listener;
 
-import io.github.enixor.minecraft.lizardauth.LizardAuthPlugin;
-import io.github.enixor.minecraft.lizardauth.session.SessionManager;
+import io.github.zrdzn.minecraft.lizardauth.LizardAuthPlugin;
+import io.github.zrdzn.minecraft.lizardauth.session.SessionManager;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.entity.Player;

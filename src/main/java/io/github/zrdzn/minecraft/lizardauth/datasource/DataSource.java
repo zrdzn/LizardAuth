@@ -1,4 +1,4 @@
-package io.github.enixor.minecraft.lizardauth.datasource;
+package io.github.zrdzn.minecraft.lizardauth.datasource;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;

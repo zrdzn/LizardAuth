@@ -1,6 +1,6 @@
-package io.github.enixor.minecraft.lizardauth.listener;
+package io.github.zrdzn.minecraft.lizardauth.listener;
 
-import io.github.enixor.minecraft.lizardauth.session.SessionManager;
+import io.github.zrdzn.minecraft.lizardauth.session.SessionManager;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerQuitEvent;

@@ -1,4 +1,4 @@
-package io.github.enixor.minecraft.lizardauth.configuration;
+package io.github.zrdzn.minecraft.lizardauth.configuration;
 
 public record PasswordSettings(int minimumPasswordLength, int maximumPasswordLength) {
 

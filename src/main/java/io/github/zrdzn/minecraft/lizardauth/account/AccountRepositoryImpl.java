@@ -1,4 +1,4 @@
-package io.github.enixor.minecraft.lizardauth.account;
+package io.github.zrdzn.minecraft.lizardauth.account;
 
 import at.favre.lib.crypto.bcrypt.BCrypt;
 import com.zaxxer.hikari.HikariDataSource;

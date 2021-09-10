@@ -1,6 +1,6 @@
-package io.github.enixor.minecraft.lizardauth.account;
+package io.github.zrdzn.minecraft.lizardauth.account;
 
-import io.github.enixor.minecraft.lizardauth.session.SessionManager;
+import io.github.zrdzn.minecraft.lizardauth.session.SessionManager;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Server;
