@@ -12,4 +12,3 @@ target/
 .gradle
 out/
 run/
-gradle/

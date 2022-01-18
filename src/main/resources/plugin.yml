@@ -1,7 +1,7 @@
 name: LizardAuth
 version: 1.0.0
 main: io.github.zrdzn.minecraft.lizardauth.LizardAuthPlugin
-api-version: 1.17
+api-version: 1.18
 author: zrdzn
 description: Simple and secure authorization plugin for minecraft servers.
 commands:
