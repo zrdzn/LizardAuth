@@ -1,81 +1,70 @@
 package io.github.zrdzn.minecraft.lizardauth.account;
 
+import io.github.zrdzn.minecraft.lizardauth.message.MessageService;
 import io.github.zrdzn.minecraft.lizardauth.session.SessionManager;
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.NamedTextColor;
-import org.bukkit.Server;
-import org.bukkit.entity.Player;
 
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 
 public class AccountServiceImpl implements AccountService {
 
-    private final Server server;
     private final AccountRepository accountRepository;
     private final SessionManager sessionManager;
+    private final MessageService messageService;
 
-    public AccountServiceImpl(Server server, AccountRepository accountRepository, SessionManager sessionManager) {
-        this.server = server;
+    public AccountServiceImpl(AccountRepository accountRepository, SessionManager sessionManager, MessageService messageService) {
         this.accountRepository = accountRepository;
         this.sessionManager = sessionManager;
+        this.messageService = messageService;
     }
 
     @Override
-    public void registerAccount(UUID playerId, String password, boolean force) {
-        Player player = this.server.getPlayer(playerId);
-        if (player == null) {
-            throw new IllegalArgumentException("Player with " + playerId + " does not exist.");
-        }
+    public CompletableFuture<Void> registerAccount(UUID playerId, String password, boolean force) {
+        return CompletableFuture.runAsync(() -> {
+            if (this.accountRepository.isRegistered(playerId)) {
+                this.messageService.sendMessage(playerId, "already-registered");
+                return;
+            }
 
-        if (this.isRegistered(playerId)) {
-            player.sendMessage(Component.text("You are already registered.", NamedTextColor.RED));
-            return;
-        }
+            if (!this.accountRepository.registerAccount(playerId, null, password)) {
+                this.messageService.sendMessage(playerId, "could-not-register");
+                return;
+            }
 
-        if (!this.accountRepository.registerAccount(playerId, player.getName(), password)) {
-            player.sendMessage(Component.text("Could not register account.", NamedTextColor.RED));
-            return;
-        }
-
-        player.sendMessage(Component.text("Successfully registered.", NamedTextColor.GREEN));
-
-        if (!this.sessionManager.authorizePlayer(playerId, password, force)) {
-            player.kick(Component.text("Something went wrong with auto authenticating, please log in to authenticate manually.", NamedTextColor.RED));
-            return;
-        }
-
-        player.sendMessage(Component.text("You have successfully auto authenticated after registering.", NamedTextColor.GREEN));
+            this.messageService.sendMessage(playerId, "successfully-registered");
+            this.messageService.sendMessage(playerId, "auto-authorized");
+        });
     }
 
     @Override
-    public void unregisterAccount(UUID playerId, String password, boolean force) {
-        Player player = this.server.getPlayer(playerId);
-        if (player == null) {
-            throw new IllegalArgumentException("Player with " + playerId + " does not exist.");
-        }
+    public CompletableFuture<Void> unregisterAccount(UUID playerId, String password, boolean force) {
+        return CompletableFuture.runAsync(() -> {
+            if (!this.sessionManager.authorizePlayer(playerId, password, force)) {
+                this.messageService.sendMessage(playerId, "incorrect-password");
+                return;
+            }
 
-        if (!this.sessionManager.authorizePlayer(playerId, password, force)) {
-            player.sendMessage(Component.text("Password is incorrect or something went wrong.", NamedTextColor.RED));
-            return;
-        }
+            if (!this.accountRepository.unregisterAccount(playerId, password)) {
+                this.messageService.sendMessage(playerId, "could-not-unregister");
+                return;
+            }
 
-        if (!this.accountRepository.unregisterAccount(playerId, password)) {
-            player.sendMessage(Component.text("Could not unregister account.", NamedTextColor.RED));
-            return;
-        }
+            if (force) {
+                this.messageService.sendMessage(playerId, "force-unregister");
+                return;
+            }
 
-        if (force) {
-            player.sendMessage(Component.text("You have been unregistered by staff.", NamedTextColor.GOLD));
-        }
+            this.messageService.sendMessage(playerId, "successfully-unregistered");
 
-        player.sendMessage(Component.text("Successfully unregistered.", NamedTextColor.GREEN));
+            this.sessionManager.deauthorizePlayer(playerId);
+        });
 
-        this.sessionManager.deauthorizePlayer(playerId);
+
     }
 
     @Override
-    public boolean isRegistered(UUID playerId) {
-        return this.accountRepository.isRegistered(playerId);
+    public CompletableFuture<Boolean> isRegistered(UUID playerId) {
+        return CompletableFuture.supplyAsync(() -> this.accountRepository.isRegistered(playerId));
     }
 
 }

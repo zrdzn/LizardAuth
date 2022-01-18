@@ -1,6 +1,5 @@
 package io.github.zrdzn.minecraft.lizardauth.command;
 
-import io.github.zrdzn.minecraft.lizardauth.LizardAuthPlugin;
 import io.github.zrdzn.minecraft.lizardauth.account.AccountService;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
@@ -12,11 +11,9 @@ import org.jetbrains.annotations.NotNull;
 
 public class UnregisterCommand implements CommandExecutor {
 
-    private final LizardAuthPlugin plugin;
     private final AccountService accountService;
 
-    public UnregisterCommand(LizardAuthPlugin plugin, AccountService accountService) {
-        this.plugin = plugin;
+    public UnregisterCommand(AccountService accountService) {
         this.accountService = accountService;
     }
 
@@ -31,8 +28,7 @@ public class UnregisterCommand implements CommandExecutor {
             return true;
         }
 
-        this.plugin.getServer().getScheduler().runTaskAsynchronously(this.plugin, () ->
-                this.accountService.unregisterAccount(player.getUniqueId(), args[0], false));
+        this.accountService.unregisterAccount(player.getUniqueId(), args[0], false);
 
         return true;
     }

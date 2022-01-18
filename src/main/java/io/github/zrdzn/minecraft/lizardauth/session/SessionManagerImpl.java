@@ -2,6 +2,7 @@ package io.github.zrdzn.minecraft.lizardauth.session;
 
 import at.favre.lib.crypto.bcrypt.BCrypt;
 import io.github.zrdzn.minecraft.lizardauth.account.AccountRepository;
+import io.github.zrdzn.minecraft.lizardauth.message.MessageService;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Server;
@@ -16,11 +17,13 @@ public class SessionManagerImpl implements SessionManager {
 
     private final Server server;
     private final AccountRepository accountRepository;
+    private final MessageService messageService;
     private final Map<UUID, BukkitTask> playerTaskMap = new HashMap<>();
 
-    public SessionManagerImpl(Server server, AccountRepository accountRepository) {
+    public SessionManagerImpl(Server server, AccountRepository accountRepository, MessageService messageService) {
         this.server = server;
         this.accountRepository = accountRepository;
+        this.messageService = messageService;
     }
 
     @Override
@@ -37,18 +40,18 @@ public class SessionManagerImpl implements SessionManager {
             }
 
             if (this.isPlayerLoggedIn(playerId)) {
-                player.sendMessage(Component.text("You are already authorized.", NamedTextColor.RED));
+                this.messageService.sendMessage(playerId, "already-authorized");
                 return false;
             }
 
             if (!this.accountRepository.isRegistered(playerId)) {
-                player.sendMessage(Component.text("You need to register first.", NamedTextColor.RED));
+                this.messageService.sendMessage(playerId, "need-to-register-first");
                 return false;
             }
 
             String hashedPassword = this.accountRepository.getHashedPassword(playerId);
             if (hashedPassword == null) {
-                player.sendMessage(Component.text("Something went wrong while authenticating.", NamedTextColor.RED));
+                this.messageService.sendMessage(playerId, "could-not-authorize");
                 return false;
             }
 

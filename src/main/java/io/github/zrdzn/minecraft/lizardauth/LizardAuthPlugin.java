@@ -81,8 +81,6 @@ public class LizardAuthPlugin extends JavaPlugin {
 
         AccountRepository accountRepository = new AccountRepositoryImpl(this.getDataSource(), logger);
 
-        SessionManager sessionManager = new SessionManagerImpl(server, accountRepository);
-
         MessageService messageService = new MessageServiceImpl(configuration, logger, server);
         try {
             logger.info("Loading messages from configuration file.");
@@ -93,10 +91,12 @@ public class LizardAuthPlugin extends JavaPlugin {
             return;
         }
 
+        SessionManager sessionManager = new SessionManagerImpl(server, accountRepository, messageService);
+
         AccountService accountService = new AccountServiceImpl(accountRepository, sessionManager, messageService);
 
         this.getCommand("register").setExecutor(new RegisterCommand(this, accountService));
-        this.getCommand("unregister").setExecutor(new UnregisterCommand(this, accountService));
+        this.getCommand("unregister").setExecutor(new UnregisterCommand(accountService));
         this.getCommand("login").setExecutor(new LoginCommand(sessionManager));
 
         pluginManager.registerEvents(new PlayerJoinListener(this, sessionManager), this);
