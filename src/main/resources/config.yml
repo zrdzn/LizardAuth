@@ -24,3 +24,16 @@ password:
 
 # Time interval in seconds between two login reminder messages
 reminder-message-frequency: 5
+
+messages:
+  already-registered: "<red>You are already registered.</red>"
+  could-not-register: "<red>Could not register account.</red>"
+  successfully-registered: "<green>Successfully registered.</green>"
+  already-authorized: "<red>You are already authorized.</green>"
+  could-not-authorize: "<red>Something went wrong with auto authenticating, please log in to authenticate manually.</red>"
+  need-to-register-first: "<red>You need to register first.</red>"
+  incorrect-password: "<red>Incorrect password.</red>"
+  auto-authorized: "<green>You have successfully auto authenticated after registering.</green>"
+  could-not-unregister: "<red>Could not unregister account.</red>"
+  force-unregister: "<green>You have been unregistered by staff.</green>"
+  successfully-unregistered: "<green>You have been successfully unregistered.</green>"

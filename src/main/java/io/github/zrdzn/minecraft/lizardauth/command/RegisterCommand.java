@@ -58,8 +58,7 @@ public class RegisterCommand implements CommandExecutor {
             return true;
         }
 
-        this.plugin.getServer().getScheduler().runTaskAsynchronously(this.plugin, () ->
-                this.accountService.registerAccount(player.getUniqueId(), args[0], false));
+        this.accountService.registerAccount(player.getUniqueId(), args[0], false);
 
         return true;
     }
