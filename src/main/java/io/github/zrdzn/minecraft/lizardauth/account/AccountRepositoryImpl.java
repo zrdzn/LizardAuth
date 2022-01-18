@@ -2,6 +2,7 @@ package io.github.zrdzn.minecraft.lizardauth.account;
 
 import at.favre.lib.crypto.bcrypt.BCrypt;
 import com.zaxxer.hikari.HikariDataSource;
+import org.slf4j.Logger;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -11,9 +12,11 @@ import java.util.UUID;
 
 public class AccountRepositoryImpl implements AccountRepository {
 
+    private final Logger logger;
     private final HikariDataSource dataSource;
 
-    public AccountRepositoryImpl(HikariDataSource dataSource) {
+    public AccountRepositoryImpl(HikariDataSource dataSource, Logger logger) {
+        this.logger = logger;
         this.dataSource = dataSource;
     }
 
@@ -28,7 +31,7 @@ public class AccountRepositoryImpl implements AccountRepository {
             statement.executeUpdate();
             return true;
         } catch (SQLException exception) {
-            exception.printStackTrace();
+            this.logger.error("Something went wrong while inserting account.", exception);
             return false;
         }
     }
@@ -42,7 +45,7 @@ public class AccountRepositoryImpl implements AccountRepository {
             statement.executeUpdate();
             return true;
         } catch (SQLException exception) {
-            exception.printStackTrace();
+            this.logger.error("Something went wrong while deleting account.", exception);
             return false;
         }
     }
@@ -57,7 +60,7 @@ public class AccountRepositoryImpl implements AccountRepository {
 
             return resultSet.next();
         } catch (SQLException exception) {
-            exception.printStackTrace();
+            this.logger.error("Something went wrong while selecting account.", exception);
             return false;
         }
     }
@@ -75,7 +78,7 @@ public class AccountRepositoryImpl implements AccountRepository {
 
             return resultSet.getString("password");
         } catch (SQLException exception) {
-            exception.printStackTrace();
+            this.logger.error("Something went wrong while selecting password from account.", exception);
             return null;
         }
     }

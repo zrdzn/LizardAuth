@@ -66,7 +66,9 @@ public class LizardAuthPlugin extends JavaPlugin {
         try (Connection connection = this.dataSource.getConnection(); PreparedStatement statement = connection.prepareStatement(query)) {
             statement.executeUpdate();
         } catch (SQLException exception) {
-            exception.printStackTrace();
+            logger.error("Something went wrong while creating 'accounts' table.", exception);
+            pluginManager.disablePlugin(this);
+            return;
         }
 
         PasswordSettingsParser passwordSettingsParser = new PasswordSettingsParser();
