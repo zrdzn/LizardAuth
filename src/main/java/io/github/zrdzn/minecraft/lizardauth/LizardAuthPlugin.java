@@ -4,6 +4,8 @@ import com.zaxxer.hikari.HikariDataSource;
 import io.github.zrdzn.minecraft.lizardauth.account.AccountRepository;
 import io.github.zrdzn.minecraft.lizardauth.account.AccountService;
 import io.github.zrdzn.minecraft.lizardauth.account.AccountServiceImpl;
+import io.github.zrdzn.minecraft.lizardauth.message.MessageService;
+import io.github.zrdzn.minecraft.lizardauth.message.MessageServiceImpl;
 import io.github.zrdzn.minecraft.lizardauth.session.SessionManager;
 import io.github.zrdzn.minecraft.lizardauth.command.LoginCommand;
 import io.github.zrdzn.minecraft.lizardauth.command.RegisterCommand;
@@ -18,6 +20,7 @@ import io.github.zrdzn.minecraft.lizardauth.listener.PlayerQuitListener;
 import org.bukkit.Server;
 import org.bukkit.configuration.Configuration;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.slf4j.Logger;
@@ -80,7 +83,17 @@ public class LizardAuthPlugin extends JavaPlugin {
 
         SessionManager sessionManager = new SessionManagerImpl(server, accountRepository);
 
-        AccountService accountService = new AccountServiceImpl(server, accountRepository, sessionManager);
+        MessageService messageService = new MessageServiceImpl(configuration, logger, server);
+        try {
+            logger.info("Loading messages from configuration file.");
+            messageService.load(configuration.getConfigurationSection("messages"));
+        } catch (InvalidConfigurationException exception) {
+            logger.error("Section 'messages' does not exist.", exception);
+            pluginManager.disablePlugin(this);
+            return;
+        }
+
+        AccountService accountService = new AccountServiceImpl(accountRepository, sessionManager, messageService);
 
         this.getCommand("register").setExecutor(new RegisterCommand(this, accountService));
         this.getCommand("unregister").setExecutor(new UnregisterCommand(this, accountService));
