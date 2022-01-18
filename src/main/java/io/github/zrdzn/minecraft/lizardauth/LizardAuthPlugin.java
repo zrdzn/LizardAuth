@@ -76,7 +76,7 @@ public class LizardAuthPlugin extends JavaPlugin {
 
         this.reminderMessageFrequency = configuration.getLong("reminder-message-frequency", 5L);
 
-        AccountRepository accountRepository = new AccountRepositoryImpl(this.getDataSource());
+        AccountRepository accountRepository = new AccountRepositoryImpl(this.getDataSource(), logger);
 
         SessionManager sessionManager = new SessionManagerImpl(server, accountRepository);
 
