@@ -59,7 +59,6 @@ public class SessionManagerImpl implements SessionManager {
             }
         }
 
-        System.out.println(this.playerTaskMap.get(playerId).getTaskId());
         this.playerTaskMap.get(playerId).cancel();
         this.playerTaskMap.remove(playerId);
 

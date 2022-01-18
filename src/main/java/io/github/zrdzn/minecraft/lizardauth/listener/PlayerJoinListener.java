@@ -31,7 +31,6 @@ public class PlayerJoinListener implements Listener {
                         player.sendMessage(Component.text("Login with /login <password>.", NamedTextColor.RED)),
                 20L * 2L, 20L * this.plugin.getReminderMessageFrequency());
 
-        System.out.println(task.getTaskId());
         this.sessionManager.getPlayerTaskMap().put(playerId, task);
     }
 
